@@ -38,3 +38,12 @@ export class ServerComponent implements OnInit {
   }
 
 }
+
+
+/*
+  Par défaut, les paramètres de requête sont supprimés lors de la navigation.
+  L'option 'queryParamsHandling: "preserve"' garantit que tous les paramètres de requête actuels dans l'URL sont conservés lors de cette navigation.
+  Ceci est utile pour conserver les filtres, la pagination ou d'autres paramètres.
+  Ici on ne veut pas perdre le paramètre 'allowEdit' lors de la navigation car on en a besoin dans le composant 'edit-server' pour savoir si on peut éditer le serveur ou non
+  Si on peut edtiter le serveur, on affiche le formulaire d'édition, sinon on affiche un message d'erreur
+*/
