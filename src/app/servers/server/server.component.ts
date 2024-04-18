@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Data, Params, Router } from '@angular/router';
 
 import { ServersService } from '../servers.service';
 
@@ -21,16 +21,28 @@ export class ServerComponent implements OnInit {
     private router: Router
   ) { }
 
-  ngOnInit() {
-    const id = +this.activatedRoute.snapshot.params['id'];
-    this.server = this.serversService.getServer(id);
 
-    this.activatedRoute.params
+  ngOnInit() {
+
+    // ================== Fetching data with the 'snapshot' approach ==================
+    // const id = +this.activatedRoute.snapshot.params['id'];
+    // this.server = this.serversService.getServer(id);
+
+    // this.activatedRoute.params
+    //   .subscribe(
+    //     (params: Params) => {  
+    //       this.server = this.serversService.getServer(+params['id']);
+    //     }
+    //   );
+
+    // ============== Fetching data with the 'resolve' guard ============== 
+    this.activatedRoute.data
       .subscribe(
-        (params: Params) => {  
-          this.server = this.serversService.getServer(+params['id']);
+        (data: Data) => {                 // (data: Data) ou (data: { server: { id: number, name: string, status: string }})
+          this.server = data['server'];
         }
       );
+      
   }
 
   onEdit() {
@@ -38,6 +50,7 @@ export class ServerComponent implements OnInit {
   }
 
 }
+
 
 
 /*

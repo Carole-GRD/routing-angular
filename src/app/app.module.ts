@@ -35,7 +35,7 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     FormsModule,
     AppRoutingModule
   ],
-  providers: [ServersService, AuthService],
+  providers: [ServersService, AuthService/*, AuthGuard, CanDeactivateGuard, ServerResolver*/],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
