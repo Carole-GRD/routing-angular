@@ -16,28 +16,28 @@ import { ServerResolver } from "./servers/server/server-resolver.guard";
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
-    { 
-        path: 'users', 
-        component: UsersComponent, 
+    {
+        path: 'users',
+        component: UsersComponent,
         children: [
             { path: ':id/:name', component: UserComponent }
         ]
     },
-    { 
-        path: 'servers', 
+    {
+        path: 'servers',
         // canActivate: [AuthGuard], 
-        canActivateChild: [AuthGuard], 
-        component: ServersComponent, 
+        canActivateChild: [AuthGuard],
+        component: ServersComponent,
         children: [
-            { 
-                path: ':id', 
+            {
+                path: ':id',
                 resolve: { server: ServerResolver },
-                component: ServerComponent 
+                component: ServerComponent
             },
-            { 
-                path: ':id/edit', 
+            {
+                path: ':id/edit',
                 canDeactivate: [CanDeactivateGuard],
-                component: EditServerComponent 
+                component: EditServerComponent
             }
         ]
     },
@@ -54,3 +54,19 @@ export const routes: Routes = [
 
 
 export class AppRoutingModule { }
+
+
+/*
+    Configuration du RouterModule pour votre application Angular
+
+    imports: [RouterModule.forRoot(routes, { useHash: true })],
+        ... au lieu de ...
+    imports: [RouterModule.forRoot(routes)],
+ 
+    useHash: true signifie que le routage de l'application utilisera le mode de hash
+    Dans ce mode, l'URL contiendra un '#' après le nom de domaine de base
+    Exemple : http://example.com/#/users
+    Cela permet de gérer le routage côté client sans que le serveur ne doive intervenir pour chaque changement de route
+    Le mode de hash est particulièrement utile si le serveur n'est pas configuré pour renvoyer l'index.html pour les routes gérées par Angular
+    Cela aide également à éviter des problèmes avec les routes qui pourraient être interceptées ou mal gérées par le serveur
+*/
