@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { ServersService } from '../servers.service';
-import { CanComponentDeactivate } from './can-deactivate-guard';
+import { ComponentCanDeactivate } from './can-deactivate.guard';
 
 
 @Component({
@@ -12,13 +12,13 @@ import { CanComponentDeactivate } from './can-deactivate-guard';
 })
 
 
-export class EditServerComponent implements OnInit, CanComponentDeactivate {
+export class EditServerComponent implements OnInit, ComponentCanDeactivate {
 
   server: {id: number, name: string, status: string};
   serverName = '';
   serverStatus = '';
-  allowEdit = false;
-  changesSaved = false;
+  allowEdit = false; // Contrôle si l'utilisateur peut éditer le serveur
+  changesSaved = false; // Indicateur si les modifications ont été enregistrées
 
   constructor(
     private serversService: ServersService,
@@ -26,13 +26,13 @@ export class EditServerComponent implements OnInit, CanComponentDeactivate {
     private router: Router
   ) { }
 
+
   ngOnInit() {
-    console.log(this.activatedRoute.snapshot.queryParams);
-    console.log(this.activatedRoute.snapshot.fragment);
 
     // "queryParams" et "fragment" sont des observables, on s'abonne pour les lire à chaque changement et pas seulement une fois à l'initialisation du composant
     // pas besoin de se désabonner car Angular le fait pour nous comme pour "params"
     // Angular sait que ces observables sont liés à la durée de vie du composant et qu'ils seront détruits en même temps que le composant
+    // S'abonne aux queryParams pour permettre ou non l'édition selon le paramètre 'allowEdit'
     this.activatedRoute.queryParams
       .subscribe(
         (queryParams: Params) => {
@@ -55,10 +55,14 @@ export class EditServerComponent implements OnInit, CanComponentDeactivate {
     this.router.navigate(['../'], {relativeTo: this.activatedRoute, queryParamsHandling: 'preserve', fragment: 'loading'});
   }
 
+  // Implémentation de la méthode de l'interface ComponentCanDeactivate
   canDeactivate(): boolean {
+    
+    // Si l'édition n'est pas autorisée, permet toujours de quitter
     if (!this.allowEdit) {
       return true;
     }
+    // Si les noms ou statuts sont modifiés et que ces changements ne sont pas sauvegardés, demande confirmation pour quitter la page
     if ((this.serverName !== this.server.name || this.serverStatus !== this.server.status) && !this.changesSaved) {
       return confirm("Voulez-vous vraiment quitter cette page ? Des modifications pourraient ne pas être enregistrées.");
     }
